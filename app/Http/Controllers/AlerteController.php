@@ -32,7 +32,11 @@ class AlerteController extends Controller
         }
     public function index()
     {
-        //
+        $alertes = Alerte::with('typeAlerte')
+                    ->latest()
+                    ->get();
+
+        return view('alertes', compact('alertes'));
     }
 
     /**
@@ -56,7 +60,9 @@ class AlerteController extends Controller
      */
     public function show(Alerte $alerte)
     {
-        //
+        $alerte->load('typeAlerte');
+
+        //return view('alerte', compact('alerte'));
     }
 
     /**
@@ -81,5 +87,18 @@ class AlerteController extends Controller
     public function destroy(Alerte $alerte)
     {
         //
+    }
+
+    /**
+     * Get the 5 most recent alerts.
+     */
+    public function getLatestAlertes()
+    {
+        $alertes = Alerte::with('typeAlerte')
+                    ->latest('date')  // Order by date field
+                    ->take(5)         // Limit to 5 records
+                    ->get();
+
+        return view('alertes', compact('latestAlertes'));
     }
 }
