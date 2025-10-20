@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Alerte;
+use App\Models\Type_alerte;
 use Illuminate\Http\Request;
 
 class AlerteController extends Controller
@@ -14,30 +15,45 @@ class AlerteController extends Controller
 
      //fonction pour retoune les alerte sur le site vitrine cert
 
-    public function certIndex()
-    {
-            $alertes = Alerte::with('typeAlerte')
-                        ->latest()
-                        ->get(['id', 'reference', 'intitule', 'type_alerte_id', 'date_initial', 'date_traite']);
-            //le cert doit etre remlacer par le nom de la vue qui vas afficher les alerte
-            return view('cert', compact('alertes'));
-    }
+    // public function certIndex()
+    // {
+    //         $alertes = Alerte::with('typeAlerte')
+    //                     ->latest()
+    //                     ->get(['id', 'reference', 'intitule', 'type_alerte_id', 'date_initial', 'date_traite']);
+    //         //le cert doit etre remlacer par le nom de la vue qui vas afficher les alerte
+    //         return view('cert', compact('alertes'));
+    // }
     
 
-    public function certShow($id)
-        {
-            $alerte = Alerte::with('typeAlerte')->findOrFail($id);
-            //le cert_detail doit etre remlacer par le nom de la vue qui vas afficher les alertes
-            return view('cert_detail', compact('alerte'));
-        }
-    public function index()
+    // public function certShow($id)
+    //     {
+    //         $alerte = Alerte::with('typeAlerte')->findOrFail($id);
+    //         //le cert_detail doit etre remlacer par le nom de la vue qui vas afficher les alertes
+    //         return view('cert_detail', compact('alerte'));
+    //     }
+      public function certIndex()
     {
-        $alertes = Alerte::with('typeAlerte')
-                    ->latest()
-                    ->get();
+        $types = Type_alerte::with(['alertes' => function ($query) {
+            $query->latest()->take(5);
+        }])->get();
 
-        return view('alertes', compact('alertes'));
+        return view('alertes', compact('types'));
     }
+
+    // Afficher toutes les alertes d’un type
+    public function alertesParType($type_id)
+    {
+        $type = Type_alerte::with('alertes')->findOrFail($type_id);
+        return view('alertes_par_type', compact('type'));
+    }
+    // public function index()
+    // {
+    //     $alertes = Alerte::with('typeAlerte')
+    //                 ->latest()
+    //                 ->get();
+
+    //     return view('alertes', compact('alertes'));
+    // }
 
     /**
      * Show the form for creating a new resource.
@@ -62,7 +78,7 @@ class AlerteController extends Controller
     {
         $alerte->load('typeAlerte');
 
-        //return view('alerte', compact('alerte'));
+        return view('alerte_detail', compact('alerte'));
     }
 
     /**
@@ -92,13 +108,13 @@ class AlerteController extends Controller
     /**
      * Get the 5 most recent alerts.
      */
-    public function getLatestAlertes()
-    {
-        $alertes = Alerte::with('typeAlerte')
-                    ->latest('date')  // Order by date field
-                    ->take(5)         // Limit to 5 records
-                    ->get();
+    // public function getLatestAlertes()
+    // {
+    //     $alertes = Alerte::with('typeAlerte')
+    //                 ->latest('date')  // Order by date field
+    //                 ->take(5)         // Limit to 5 records
+    //                 ->get();
 
-        return view('alertes', compact('latestAlertes'));
-    }
+    //     return view('alertes', compact('latestAlertes'));
+    // }
 }

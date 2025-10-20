@@ -9,37 +9,24 @@ class Type_alerte extends Model
 {
     use SoftDeletes;
 
-    
+    protected $table = 'type_alertes';
 
     protected $fillable = [
-        'reference',
-        'intitule',
-        'type_alerte_id',
-        'date',
-        'severite',
-        'etat',
-        'date_initial',
-        'date_traite',
-        'concerne',
-        'risque',
-        'systemes_affectes',
-        'synthese',
-        'solution',
+        'libelle',
+        'description',
         'created_by',
         'updated_by',
         'deleted_by',
     ];
 
+    
     protected $dates = [
-        'date',
-        'date_initial',
-        'date_traite',
         'created_at',
         'updated_at',
         'deleted_at',
     ];
-    public function typeAlerte()
+     public function alertes()
     {
-        return $this->belongsTo(Type_alerte::class, 'type_alerte_id');
+        return $this->hasMany(Alerte::class, 'type_alerte_id');
     }
 }

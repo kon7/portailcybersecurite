@@ -7,10 +7,10 @@
         <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <a class="nav-link" aria-current="page" href="{{ route('home') }}">Acceuil</a>
+              {{-- <a class="nav-link" aria-current="page" href="{{ route('home') }}">Acceuil</a> --}}
               <!-- 'active' 'disabled' pour le hover -->
             </li>
-            <li class="nav-item dropdown">
+            {{-- <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Publication</a>
               <ul class="dropdown-menu">
                 <li>
@@ -29,7 +29,24 @@
                   <a class="dropdown-item" href="#">Tendances</a>
                 </li>
               </ul>
+            </li> --}}
+         <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
+                role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Publications
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                @foreach(\App\Models\Type_alerte::all() as $type)
+                  <li>
+                    <a class="dropdown-item" href="{{ route('alertes.par.type', $type->id) }}">
+                      {{ $type->libelle }}
+                    </a>
+                  </li>
+                @endforeach
+              </ul>
             </li>
+
+
             <li class="nav-item">
               <a class="nav-link" href="#">Documentation</a>
             </li>
